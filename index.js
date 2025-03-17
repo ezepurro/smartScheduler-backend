@@ -1,8 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import config from "./config.js";
+import authRouter from './routes/auth.js';
 // import appointmentRouter from './routes/appointments.js';
-// import authRouter from './routes/auth.js';
 // import settingsRouter from './routes/settings.js';
 // import mpRouter from './routes/mercadoPago.js';
 // import whatsappRouter from './routes/whatsapp.js';
@@ -17,7 +17,7 @@ app.use(cors());
 app.use(express.json());
 
 // Rutas
-// app.use('/api/auth', authRouter);
+app.use('/api/auth', authRouter);
 // app.use('/api/appointments', appointmentRouter);
 // app.use('/api/settings', settingsRouter);
 // app.use('/api/mercadopago', mpRouter);

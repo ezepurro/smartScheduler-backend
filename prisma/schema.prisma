@@ -1,14 +1,81 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  email        String        @unique
+  password     String
+  isAdmin      Boolean       @default(false)
+  isEmployee   Boolean       @default(false)
+  appointments Appointment[]
+  businesses   Business[]    @relation("UserBusinesses")
+  employees    Employee[]
+}
+
+model Business {
+  id           String            @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  description  String?
+  ownerId      String?           @unique @db.ObjectId
+  owner        User?             @relation("UserBusinesses", fields: [ownerId], references: [id])
+  employees    Employee[]
+  services     Service[]
+  appointments Appointment[]
+  settings     BusinessSettings?
+}
+
+model Employee {
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  userId       String        @db.ObjectId
+  user         User          @relation(fields: [userId], references: [id])
+  businessId   String        @db.ObjectId
+  business     Business      @relation(fields: [businessId], references: [id])
+  role         String
+  appointments Appointment[]
+}
+
+model Service {
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  description  String?
+  duration     Int?
+  price        Float?
+  businessId   String        @db.ObjectId
+  business     Business      @relation(fields: [businessId], references: [id])
+  appointments Appointment[]
+}
+
+model Appointment {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  clientId      String    @db.ObjectId
+  client        User      @relation(fields: [clientId], references: [id])
+  employeeId    String?   @db.ObjectId
+  employee      Employee? @relation(fields: [employeeId], references: [id])
+  serviceId     String    @db.ObjectId
+  service       Service   @relation(fields: [serviceId], references: [id])
+  businessId    String    @db.ObjectId
+  business      Business  @relation(fields: [businessId], references: [id]) 
+  date          DateTime
+  sessionLength Int?
+  contact       String
+  type          String
+  status        String
+  createdAt     DateTime  @default(now())
+}
+
+model BusinessSettings {
+  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
+  businessId          String   @unique @db.ObjectId
+  business            Business @relation(fields: [businessId], references: [id])
+  availableDays       String[] @default(["Lun", "Mar", "Mie", "Jue", "Vie"])
+  openingTime         String?
+  closingTime         String?
+  serviceAvailability Json // [{ "serviceId": "123", "dates": ["2025-03-21T00:00:00.000Z", "2025-03-22T00:00:00.000Z"] }]
 }
