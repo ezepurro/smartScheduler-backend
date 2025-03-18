@@ -5,7 +5,7 @@ dotenv.config();
 const config = {
     PORT: process.env.PORT || 3000,
     DATABASE_URL: process.env.DATABASE_URL, 
-    // SECRET_JWT_SEED: process.env.SECRET_JWT_SEED,
+    SECRET_JWT_SEED: process.env.SECRET_JWT_SEED,
     // CALENDARID: process.env.CALENDARID,
     // MP_ACCESS_TOKEN: process.env.MP_ACCESS_TOKEN,
     // WHATSAPP_ACCESS_TOKEN: process.env.WHATSAPP_ACCESS_TOKEN,
@@ -16,7 +16,7 @@ const config = {
 
 const requiredEnvVars = [
     "DATABASE_URL",
-    // "SECRET_JWT_SEED",
+    "SECRET_JWT_SEED",
     // "CALENDARID",
     // "MP_ACCESS_TOKEN",
     // "WHATSAPP_ACCESS_TOKEN",

@@ -15,28 +15,13 @@ model User {
   isAdmin      Boolean       @default(false)
   isEmployee   Boolean       @default(false)
   appointments Appointment[]
-  businesses   Business[]    @relation("UserBusinesses")
   employees    Employee[]
-}
-
-model Business {
-  id           String            @id @default(auto()) @map("_id") @db.ObjectId
-  name         String
-  description  String?
-  ownerId      String?           @unique @db.ObjectId
-  owner        User?             @relation("UserBusinesses", fields: [ownerId], references: [id])
-  employees    Employee[]
-  services     Service[]
-  appointments Appointment[]
-  settings     BusinessSettings?
 }
 
 model Employee {
   id           String        @id @default(auto()) @map("_id") @db.ObjectId
   userId       String        @db.ObjectId
   user         User          @relation(fields: [userId], references: [id])
-  businessId   String        @db.ObjectId
-  business     Business      @relation(fields: [businessId], references: [id])
   role         String
   appointments Appointment[]
 }
@@ -47,8 +32,6 @@ model Service {
   description  String?
   duration     Int?
   price        Float?
-  businessId   String        @db.ObjectId
-  business     Business      @relation(fields: [businessId], references: [id])
   appointments Appointment[]
 }
 
@@ -60,20 +43,15 @@ model Appointment {
   employee      Employee? @relation(fields: [employeeId], references: [id])
   serviceId     String    @db.ObjectId
   service       Service   @relation(fields: [serviceId], references: [id])
-  businessId    String    @db.ObjectId
-  business      Business  @relation(fields: [businessId], references: [id]) 
   date          DateTime
   sessionLength Int?
   contact       String
-  type          String
   status        String
   createdAt     DateTime  @default(now())
 }
 
 model BusinessSettings {
   id                  String   @id @default(auto()) @map("_id") @db.ObjectId
-  businessId          String   @unique @db.ObjectId
-  business            Business @relation(fields: [businessId], references: [id])
   availableDays       String[] @default(["Lun", "Mar", "Mie", "Jue", "Vie"])
   openingTime         String?
   closingTime         String?

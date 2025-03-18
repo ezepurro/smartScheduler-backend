@@ -4,24 +4,6 @@ const prisma = new PrismaClient();
 
 async function main() {
   try {
-    // Crear un Business
-    const business = await prisma.business.create({
-      data: {
-        name: "Estética Belleza Total",
-        description: "Un salón de belleza con servicios premium",
-        owner: {
-          create: {
-            name: "Test",
-            email: "test@test.com",
-            password: "jeremias",
-            isAdmin: true,
-          },
-        },
-      },
-    });
-
-    console.log("Business creado:", business);
-
     // Crear un Service vinculado al Business
     const service = await prisma.service.create({
       data: {
@@ -29,7 +11,6 @@ async function main() {
         description: "Depilación definitiva con láser de última generación",
         duration: 60,
         price: 5000,
-        businessId: business.id,
       },
     });
 
@@ -38,8 +19,7 @@ async function main() {
     // Crear un BusinessSettings vinculado al Business con disponibilidad específica
     const businessSettings = await prisma.businessSettings.create({
       data: {
-        businessId: business.id,
-        availableDays: ["Lunes", "Miércoles", "Viernes"],
+        availableDays: ["Lun", "Mie", "Vie"],
         openingTime: "09:00",
         closingTime: "18:00",
         serviceAvailability: JSON.stringify([
