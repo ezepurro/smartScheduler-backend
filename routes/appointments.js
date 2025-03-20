@@ -14,6 +14,7 @@ appointmentRouter.get('/',
     ], 
     getAppointments
 );
+appointmentRouter.post('/findIntervals', findIntervals(req,res))
 
 appointmentRouter.get('/service/:service', 
     [

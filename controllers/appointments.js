@@ -423,3 +423,14 @@ export const getReservedAppointments = async (req, res) => {
         return res.status(500).json({ msg: "Error interno del servidor" });
     }
 };
+
+export function findIntervals (req,res) {
+    const { service,ammount } = req;
+    const foundedService = prisma.service.find({
+        where: {
+            name: service
+        }
+    
+    })
+    return foundedService.multiplicable? foundedService.duration * ammount : foundedService.duration
+}

@@ -46,6 +46,7 @@ model Appointment {
   serviceId     String    @db.ObjectId
   service       Service   @relation(fields: [serviceId], references: [id])
   date          DateTime
+  multiplicable Boolean
   sessionLength Int?
   contact       String
   status        String
