@@ -80,6 +80,33 @@ export const getAllUsers = async ( req, res = response ) => {
     }
 }
 
+export const getAllUsersPaginated = async (req, res = response) => {
+    const { page = 1, limit = 10 } = req.query;
+    const pageNumber = parseInt(page);
+    const limitNumber = parseInt(limit);
+
+    try {
+        const totalUsers = await prisma.user.count();
+        const users = await prisma.user.findMany({
+            skip: (pageNumber - 1) * limitNumber,
+            take: limitNumber
+        });
+
+        res.json({
+            ok: true,
+            users,
+            totalPages: Math.ceil(totalUsers / limitNumber),
+            currentPage: pageNumber
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'No se puede obtener los usuarios de la db'
+        });
+    }
+};
+
 export const getUserById = async ( req, res = response ) => {
     const userId = req.params.id;
     try {
@@ -113,7 +140,10 @@ export const updateUserById = async ( req, res = response ) => {
                 msg: 'No se ha encontrado el usuario'
             });
         } 
-        const updatedUser = await prisma.user.update({ where: { id: userId }, data: req.body });
+
+        const { id, ...updateData } = req.body;
+        const updatedUser = await prisma.user.update({ where: { id: userId }, data: updateData });
+        
         res.status(200).json({
             ok: true,
             updatedUser

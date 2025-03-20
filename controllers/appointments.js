@@ -108,7 +108,7 @@ export const getUserAppointments = async ( req, res = response ) => {
         }
         const appointments = await prisma.appointment.findMany({ 
             where: { clientId: userId },
-            include: { service: true, business: true }
+            include: { service: true }
         });
         res.json({
             ok: true,

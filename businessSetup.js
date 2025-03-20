@@ -19,15 +19,17 @@ async function main() {
     // Crear un BusinessSettings vinculado al Business con disponibilidad específica
     const businessSettings = await prisma.businessSettings.create({
       data: {
-        availableDays: ["Lun", "Mie", "Vie"],
-        openingTime: "09:00",
-        closingTime: "18:00",
+        openingTime: "9",
+        closingTime: "18",
         serviceAvailability: JSON.stringify([
           {
             serviceId: service.id,
             dates: ["2025-03-21T00:00:00.000Z", "2025-03-22T00:00:00.000Z"],
           },
         ]), 
+        adminsAmount: 1,
+        employeesAmount: 3,
+        servicesAmount: 3,
       },
     });
 
